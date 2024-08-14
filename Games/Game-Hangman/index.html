@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Hangman Game</h1>
+        </header>
+        <main>
+            <div class="word-display"></div>
+            <div class="alphabet-buttons">
+                <button class="letter-button">A</button>
+                <button class="letter-button">B</button>
+                <button class="letter-button">C</button>
+                <button class="letter-button">D</button>
+                <button class="letter-button">E</button>
+                <button class="letter-button">F</button>
+                <button class="letter-button">G</button>
+                <button class="letter-button">H</button>
+                <button class="letter-button">I</button>
+                <button class="letter-button">J</button>
+                <button class="letter-button">K</button>
+                <button class="letter-button">L</button>
+                <button class="letter-button">M</button>
+                <button class="letter-button">N</button>
+                <button class="letter-button">O</button>
+                <button class="letter-button">P</button>
+                <button class="letter-button">Q</button>
+                <button class="letter-button">R</button>
+                <button class="letter-button">S</button>
+                <button class="letter-button">T</button>
+                <button class="letter-button">U</button>
+                <button class="letter-button">V</button>
+                <button class="letter-button">W</button>
+                <button class="letter-button">X</button>
+                <button class="letter-button">Y</button>
+                <button class="letter-button">Z</button>
+            </div>
+            <div class="hangman-drawing">
+                <canvas id="hangmanCanvas" width="200" height="200"></canvas>
+            </div>
+            <div class="game-info">
+                <p class="message">Guess the word!</p>
+                <p class="attempts">Attempts left: <span class="attempts-left">10</span></p>
+            </div>
+        </main>
+        <footer>
+            <button class="restart-button">Restart Game</button>
+        </footer>
+    </div>
+    <script src="script.js" defer>
+        
+    </script>
+</body>
+</html>

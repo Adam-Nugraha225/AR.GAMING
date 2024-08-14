@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700&display=swap');
+        body {
+            font-family: "Roboto", sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-weight: 400;
+            font-style: normal;
+            height: 100vh;
+            background: #f0s
+        }
+        #start {
+            position: fixed;
+            height: 80vh;
+            width: 100vw;
+            background-color: transparent;
+            z-index: 10;
+            top: 0;
+            background-image: linear-gradient(180deg, black 0%, transparent 101%);
+            font-size: 170%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            backdrop-filter: blur(17px);
+            transition: height 0.4s, opacity 0.4s, all 0.3s;
+        }
+        .choices {
+            position: fixed;
+            background: #007672;
+            width :90%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px 20px;
+            box-shadow: 0 0 10px 0 black;
+            transition: background 0.3s;
+        }
+        #player-choice {
+            bottom: 7px;
+        }
+        .choices button {
+            padding: 10px 20px;
+            margin: 24px;
+            font-size: 16px;
+            height: 71px;
+            width: 71px;
+            background: #cbffe8;
+            border: none;
+            font-size: 222%;
+            border-radius: 101px;
+            transition: transform 0.3s;
+            user-select: none;
+        }
+        #player-choice button:active {
+            transform: scale(0.9);
+        }
+        .result, .score {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+      .score {
+        z-index: 11;
+      }
+        #player-score {
+            position: fixed;
+            bottom: 120px;
+            left: 20px;
+        }
+        #computer-score {
+            position: fixed;
+            top: 65px;
+            right: 20px;
+        }
+        .display-choices {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+        }
+        .floating-ghost {
+            position: absolute;
+            font-size: 48px;
+            z-index: 10;
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .pulse {
+            animation: pulse 0.3s ease 0s infinite;
+        }
+        #progress {
+            top: 7px;
+            background: #cbffe8;
+            display: flex;
+            justify-content: flex-start;
+            overflow: hidden;
+            height: 54px;
+            border-radius: 102px;
+            align-items: center;
+        }
+        #progressbar {
+            height: 100%;
+            background: purple;
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 100%;
+            border-radius: 100px;
+            transition: width 0.3s;
+            min-width: 54px;
+        }
+        #computerprogress {
+            position: absolute;
+            right: 10px;
+        }
+        .ghost {
+            user-select: none;
+            pointer-events: none;
+        }
+        #computerprogress, #playerprogress {
+            transition: font-size 0.4s;
+        }
+        .win {
+            background-color: #4db300;
+        }
+        .lose {
+            background-color: #a81a1a;
+        }
+        .tie {
+            background-color: #007672;
+        }
+        .reset {
+            position: absolute;
+            height: 70px;
+            width: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #397e18;
+            border-radius: 50%;
+            font-size: 3vh;
+            bottom: 160px;
+            left: 20px;
+            color: white;
+            opacity: 60%;
+            transition: opacity 0.3s;
+            user-select: none;
+            box-shadow: none;
+            z-index: 15;
+            transition: box-shadow 0.2s, translate 0.2s, scale 0.2s, opacity 0.2s;
+        }
+        .reset:hover {
+            box-shadow: 5px 4px 2px 0 #000000cc;
+            opacity: 1;
+        }
+        .reset:active {
+            box-shadow: 0px 0px 2px 0 #000000cc;
+            translate: 5px 4px;
+            scale: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div id="start">
+        Choose a weapon to start
+    </div>
+    <div class="choices" id="progress">
+        <div id="progressbar">
+            <div id="playerprogress">0%</div>
+        </div>
+        <div id="computerprogress">0%</div>
+    </div>
+    <div class="display-choices">
+        <div id="computer-display">❓</div>
+        <div id="player-display">❓</div>
+    </div>
+    <div class="choices" id="player-choice">
+        <button onclick="playGame('✊', this)">✊</button>
+        <button onclick="playGame('🤚', this)">🤚</button>
+        <button onclick="playGame('✌', this)">✌</button>
+    </div>
+    <div class="score" id="computer-score">Computer Score: 0</div>
+    <div class="score" id="player-score">Your Score: 0</div>
+    <div class="result" id="result"></div>
+    <div class="reset" id="draggableReset">
+        <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="#ffffff"><path d="M480-120q-126 0-223-76.5T131-392q-4-15 6-27.5t27-14.5q16-2 29 6t18 24q24 90 99 147t170 57q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h70q17 0 28.5 11.5T360-600q0 17-11.5 28.5T320-560H160q-17 0-28.5-11.5T120-600v-160q0-17 11.5-28.5T160-800q17 0 28.5 11.5T200-760v54q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm40-376 100 100q11 11 11 28t-11 28q-11 11-28 11t-28-11L452-452q-6-6-9-13.5t-3-15.5v-159q0-17 11.5-28.5T480-680q17 0 28.5 11.5T520-640v144Z"/></svg>
+    </div>
+    <script>
+      // Define all the variables
+        let playerScore = 0;
+        let computerScore = 0;
+        const playerprogress = document.querySelector("#playerprogress");
+        const progressbar = document.querySelector("#progressbar");
+        const computerprogress = document.querySelector("#computerprogress");
+        const start = document.querySelector("#start");
+        const choicesbar = document.querySelector("#player-choice");
+        const resetButton = document.getElementById('draggableReset');
+        const playerScoreElement = document.getElementById('player-score');
+        const computerScoreElement = document.getElementById('computer-score');
+        const playerDisplay = document.getElementById('player-display');
+        const computerDisplay = document.getElementById('computer-display');
+        const resultElement = document.getElementById('result');
+
+      // The main function to play the game when any weapon is clicked
+        function playGame(playerChoice, button) { 
+            start.style.height = "1px";
+            start.style.opacity = "0";
+            const choices = ['✊', '🤚', '✌']; 
+            const computerChoice = choices[Math.floor(Math.random() * 3)]; //A random choice to play
+
+            // Update the in the screen displays
+            playerDisplay.innerText = playerChoice;
+            computerDisplay.innerText = computerChoice;
+
+            // Determine the result
+            let result = '';
+            if (playerChoice === computerChoice) { // Tie
+                result = "It's a tie!";
+                choicesbar.classList.remove("lose", "win");
+                choicesbar.classList.add("tie");
+            } else if ( 
+              // Win variations
+                (playerChoice === '✊' && computerChoice === '✌') ||
+                (playerChoice === '🤚' && computerChoice === '✊') ||
+                (playerChoice === '✌' && computerChoice === '🤚')
+            ) {
+              // Win
+                playerScore++;  // Increase the player score
+                result = "You win!";
+                choicesbar.classList.remove("tie", "lose");
+                choicesbar.classList.add("win");
+                playerDisplay.classList.add('pulse');
+                setTimeout(() => {
+                    playerDisplay.classList.remove('pulse');
+                }, 900);
+              
+            } else { //Lose
+                computerScore++; // Increase the computer score
+                result = "You lose!";
+                choicesbar.classList.remove("tie", "win");
+                choicesbar.classList.add("lose");
+                computerDisplay.classList.add('pulse');
+                setTimeout(() => {
+                    computerDisplay.classList.remove('pulse');
+                }, 900);
+            }
+
+            // Update the scores
+            playerScoreElement.innerText = `Your Score: ${playerScore}`;
+            computerScoreElement.innerText = `Computer Score: ${computerScore}`;
+
+            // Update the result element with the result message
+            resultElement.innerText = result;
+
+            // Update the progress bar
+            updateProgress();
+
+            // Create floating ghost animation
+            createFloatingGhost(playerChoice, button);
+        }
+
+      // Floating animation for the weapons when they are clicked
+        function createFloatingGhost(choice, button) {
+            const ghost = document.createElement('div');
+            ghost.classList.add('floating-ghost', 'ghost');
+            ghost.innerText = choice;
+            document.body.appendChild(ghost); // Show the 👻
+
+          // Get the button and the display positions
+            const buttonRect = button.getBoundingClientRect(); 
+            const displayRect = playerDisplay.getBoundingClientRect();
+
+          // Starting position
+            ghost.style.left = `${buttonRect.left}px`;
+            ghost.style.top = `${buttonRect.top}px`;
+          
+          // Go to the player display with a small deley
+            setTimeout(() => {
+                ghost.style.transform = `translate(${displayRect.left - buttonRect.left}px, ${displayRect.top - buttonRect.top}px)`;
+                ghost.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => {
+                ghost.remove();
+            }, 1050);
+        }
+
+        function updateProgress() {
+            let progress = (100 * (playerScore / (computerScore + playerScore))).toFixed(0); // Get the percentages from the points in one number after "."
+            if (isNaN(progress)) { // Replace "NaN" with 0 when the both side's score is 0
+                progress = "0";
+            }
+            playerprogress.textContent = progress + "%";
+            computerprogress.textContent = (100 - progress).toFixed(0) + "%";
+            progressbar.style.width = `${100 * (playerScore / (computerScore + playerScore))}%`; // Show visualization of the persentage
+
+          // Increase the font size to the side which is ahead
+          if (progress > 50) {
+                playerprogress.style.fontSize = "200%";
+                computerprogress.style.fontSize = "100%";
+            } else if (100 - progress > 50) {
+                playerprogress.style.fontSize = "100%";
+                computerprogress.style.fontSize = "200%";
+            } else {
+                playerprogress.style.fontSize = "200%";
+                computerprogress.style.fontSize = "200%";
+            }
+        }
+
+      // Adjust sizes based on the screen size
+        function adjustSize() {
+            if (window.innerHeight < 592) {
+                start.style.height = "74vh";
+            } else {
+                start.style.height = "80vh";
+            }
+        }
+
+        var isDragging = false;
+        var wasDragged = false;
+
+        // Function to update the position of the reset button
+        function moveButton(event) {
+            var newX = event.clientX || event.touches[0].clientX;
+            var newY = event.clientY || event.touches[0].clientY;
+            resetButton.style.left = newX - resetButton.offsetWidth / 2 + 'px';
+            resetButton.style.top = newY - resetButton.offsetHeight / 2 + 'px';
+        }
+
+        // Mouse Events
+        resetButton.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            wasDragged = false;
+        }, false);
+
+        document.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                moveButton(event);
+                wasDragged = true;
+            }
+        }, false);
+
+        document.addEventListener('mouseup', function(event) {
+            if (isDragging) {
+                isDragging = false;
+            }
+        }, false);
+
+        resetButton.addEventListener('click', function(event) {
+            if (!wasDragged) {
+                reset();
+            }
+        }, false);
+
+        // Touch Events
+        resetButton.addEventListener('touchstart', function(event) {
+            isDragging = true;
+            wasDragged = false;
+        }, false);
+
+        resetButton.addEventListener('touchmove', function(event) {
+            if (isDragging) {
+                moveButton(event);
+                wasDragged = true;
+                event.preventDefault(); // Prevent scrolling when touch is used
+            }
+        }, false);
+
+        resetButton.addEventListener('touchend', function(event) {
+            if (isDragging) {
+                isDragging = false;
+            }
+            if (!wasDragged) {
+                reset();
+            }
+        }, false);
+
+        function reset() {
+            playerScoreElement.innerText = `Your Score: 0`;
+            computerScoreElement.innerText = `Computer Score: 0`;
+            computerScore = 0;
+            playerScore = 0;
+            playerDisplay.innerText = "❓";
+            computerDisplay.innerText = "❓";
+            resultElement.innerText = "";
+            updateProgress();
+            start.style.height = "80vh";
+            start.style.opacity = "1";
+          
+          adjustSize() // Readjust sizes
+        }
+      
+        // Execute the function on page load
+        window.addEventListener('load', adjustSize);
+      
+        // Execute the function on window resize
+        window.addEventListener('resize', adjustSize);
+      
+    </script>
+</body>
+</html>
